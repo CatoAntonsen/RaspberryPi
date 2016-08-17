@@ -1,22 +1,31 @@
 import RPi.GPIO as GPIO
 import time
 
-GPIO.setmode(GPIO.BCM)
+GPIO.setmode(GPIO.BOARD)
 
-GPIO.setup(17, GPIO.OUT)
+GPIO.setup(12, GPIO.OUT)
 
-p = GPIO.PWM(17, 50)
+freq = 50
 
-p.start(7.5)
+pwm = GPIO.PWM(12, freq)
 
-try:
-        while True:
-                p.ChangeDutyCycle(7.5)
-                time.sleep(1)
-                p.ChangeDutyCycle(12.5)
-                time.sleep(1)
-                p.ChangeDutyCycle(2.5)
-                time.sleep(1)
+left = 0.75
+right = 2.5
+middle = (right - left) / 2 + left
 
-except KeyboardInterrupt:
-        GPIO.cleanup()
+pList = [left, right]
+
+ms = 1000 / freq
+
+for i in range(3):
+	for p in pList:
+		duty = p * 100 / ms
+		print "Position: " + str(p)
+		print "Duty cycle: " + str(duty) + "%"
+		print ""
+		pwm.start(duty)
+		time.sleep(.5)
+
+
+pwm.stop()
+GPIO.cleanup()
