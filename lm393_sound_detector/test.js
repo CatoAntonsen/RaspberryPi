@@ -4,8 +4,7 @@ const 	Gpio = require('onoff').Gpio,
 		maxTimeBetweenClaps = 1000,
 		waitAfterLastClap = 2000;
 
-var 	lastSilent = Date.now(),
-		lastSound = null,
+var 	lastSound = null,
 		lastValue = 0,
 		claps = 0; 
 
@@ -37,7 +36,6 @@ lm393.watch(function(err, value) {
 	} else if (value == 0 && lastValue != 0) {
 		//console.log("Silent...")
 		lastValue = 0;
-		lastSilent = Date.now();
 		
 		setTimeout(function() {
 			if (claps > 0 && Date.now() - lastSound > waitAfterLastClap) {
